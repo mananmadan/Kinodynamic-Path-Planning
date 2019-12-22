@@ -45,8 +45,9 @@ public:
   }
 
 };
-bool verify_node( node node1,int minx, int miny, int maxx, int maxy);
+//bool verify_node( node node1,int minx, int miny, int maxx, int maxy);
 int find_min(vector<int> obs, int n);
+bool verify_node( node node1,int minx, int miny, int maxx, int maxy,node parent);
 int find_max(vector<int>  obs, int n);
 void calc_obstacle_map(vector<int> obsx, vector<int> obsy, int obsn, int reso, int rr);
 coordinates a_star_planning(double sx, double sy,double vx,double vy,double gx, double gy,double vgx,double vgy,vector<int>  obsx, vector<int>  obsy, int obsn, int reso, int rr );
@@ -186,8 +187,8 @@ coordinates a_star_planning(double sx, double sy,double vx,double vy,double gx, 
       }
       node current = openset[cid];
      // cout << current.x << "," <<  current.y << endl;
-      finalx=current.x;
-    finaly=current.y;
+finalx=current.x;
+finaly=current.y;
 finalvx = current.vx;
 finalvy = current.vy;
       if ( current.x == ngoal.x && current.y == ngoal.y)
@@ -211,7 +212,7 @@ finalvy = current.vy;
 
         if(closedset.find(n_id)!=closedset.end())
               continue;
-        if(verify_node(dummy, minx, miny, maxx,maxy)==0)//have to change this.
+        if(verify_node(dummy, minx, miny, maxx,maxy,current)==0)//have to change this.
           continue;
         if(openset.find(n_id)==openset.end())
         {
@@ -227,7 +228,7 @@ finalvy = current.vy;
 
       }
 testing++;
-   }
+}
 
 return coordinates(finalx, finaly,finalvx,finalvy);
 //error here did not retunr coordinates
@@ -235,7 +236,7 @@ return coordinates(finalx, finaly,finalvx,finalvy);
 
 }
 
-bool verify_node( node node1,int minx, int miny, int maxx, int maxy)
+bool verify_node( node node1,int minx, int miny, int maxx, int maxy,node parent)
 {
   if(node1.x<minx)
     return 0;
@@ -254,7 +255,68 @@ bool verify_node( node node1,int minx, int miny, int maxx, int maxy)
    return 0;
   if(node1.vy<min_vely)
    return 0;
+//node parent = closedset[node1.p_index];
+double parentx = parent.x;
+double parenty = parent.y;
+double currentx = node1.x;
+double currenty = node1.y;
+//first check if it is a straight line
+if(currentx == parentx )
+{
+   double smally = min(currenty,parenty);
+   double bigy = max(currenty,parenty);
+  for(int i=smally;i<=(int)bigy;i++)
+  {
+    if(obmap[int(currentx-minx)][i-(int)miny])
+    return 0;
+  }
+}
+//go to check from small x co-ordinate to bigger x co-ordinate check if the robot if the calculated y point is an integer and then if it is check it there is a obstacle there.
+if(currenty == parenty )
+{
+   double smallx = min(currentx,parentx);
+   double bigx = max(currentx,parentx);
+  for(int i=smallx;i<=(int)bigx;i++)
+  {
+    if(obmap[i-(int)minx][int(currenty-miny)])
+    return 0;
+  }
+}
+if(currenty!=parenty and currentx!=parentx)
+{
+  if(currentx>parentx)
+  {
+    for(int i=(int)parentx ;i<=(int)currentx;i++)
+      {
+        //calculate y;
+        double y = (((int)(currentx-parentx)*(int)((double)i - parentx))/(int)(currenty-parenty))+parenty;
+        int temp_y = (int)y;
+        if((temp_y-y)==0)
+        {
+          if(obmap[i-(int)minx][temp_y-(int)miny])
+          return 0;
+        }
+      }
 
+  }
+  else if(currentx<parentx)
+  {
+    for(int i=(int)currentx ;i<=(int)parentx;i++)
+      {
+        //calculate y;
+        double y = (((int)(parentx-currentx)*(int)((double)i - currentx))/(int)(currenty-parenty))+parenty;
+        int temp_y = (int)y;
+        if((temp_y-y)==0)
+        {
+          if(obmap[i-(int)minx][temp_y-(int)miny])
+          return 0;
+        }
+      }
+
+  }
+
+
+}
    return 1;
 }
 
@@ -374,7 +436,7 @@ int main()
     obsxarr.pb(4);obsyarr.pb(6);
     obsxarr.pb(4);obsyarr.pb(7);
 */
-   printf("Lets start working\n");
+printf("Lets start working\n");
 printf("Enter starting position coordinates");
 
 
@@ -395,8 +457,8 @@ cout<<"Enter goal x velocity"<<"\n";
 cin>>vgx;
 cout<<"Enter goal y velocity"<<"\n";
 cin>>vgy;
-   revise_obstacle_coordinates(ox,oy);
+revise_obstacle_coordinates(ox,oy);
 
-    path_planning(x_in, y_in,vx,vy,gx,gy,vgx,vgy,ox,oy);
+path_planning(x_in, y_in,vx,vy,gx,gy,vgx,vgy,ox,oy);
 
 }
