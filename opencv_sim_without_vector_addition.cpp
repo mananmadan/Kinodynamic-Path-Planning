@@ -237,7 +237,7 @@ cout<<finalvy<<endl;
 {      for(int vj=-3;vj<=3;vj++)
       {
         double cost = pow((pow((vi-current.vx),2)+pow((vj-current.vy),2)),0.5);
-        node dummy = node(current.x + (vi*1),current.y + (vj*1),current.vx+vi,current.vy+vj,cost ,cid);
+        node dummy = node(current.x + (vi*1),current.y + (vj*1),vi,vj,cost ,cid);
 	//error here xwidth intead of xw
         int n_id = calc_index(dummy, xwidth, minx, miny);
 
@@ -316,8 +316,6 @@ if(currenty == parenty )
 }
 if(currenty!=parenty and currentx!=parentx)
 {
-  //cout<<"checking for node"<<currentx<<" :"<<currenty<<endl;
-  //cout<<"and parent node"<<parentx<<" :"<<parenty<<endl;
   if(currentx>parentx)
   {
     for(int i=(int)parentx ;i<=(int)currentx;i++)
@@ -325,14 +323,9 @@ if(currenty!=parenty and currentx!=parentx)
         //calculate y;
         double y = (((int)(currentx-parentx)*(int)((double)i - parentx))/(int)(currenty-parenty))+parenty;
         int temp_y = (int)y;
-    //cout<<"checking x:"<<i<<"checking y :"<<temp_y<<endl;
-//have to check temp_y+1 also for collison;
-int temp_y1 = temp_y+1;
         if((temp_y-y)==0)
         {
-          //cout<<"Hello"<<endl;
-          //cout<<"Checking i:"<<i<<" "<<"temp_y:"<<temp_y<<endl;
-          if(obmap[i-(int)minx][temp_y-(int)miny]||obmap[i-(int)minx][temp_y1-(int)miny])
+          if(obmap[i-(int)minx][temp_y-(int)miny])
           return 0;
         }
       }
@@ -345,10 +338,9 @@ int temp_y1 = temp_y+1;
         //calculate y;
         double y = (((int)(parentx-currentx)*(int)((double)i - currentx))/(int)(currenty-parenty))+parenty;
         int temp_y = (int)y;
-        int temp_y1 = temp_y+1;
         if((temp_y-y)==0)
         {
-          if(obmap[i-(int)minx][temp_y-(int)miny]||obmap[i-(int)minx][temp_y1-(int)miny])
+          if(obmap[i-(int)minx][temp_y-(int)miny])
           return 0;
         }
       }
