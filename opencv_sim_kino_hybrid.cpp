@@ -323,7 +323,7 @@ if(currenty!=parenty and currentx!=parentx)
     for(int i=(int)parentx ;i<=(int)currentx;i++)
       {
         //calculate y;
-        double y = (((int)(currentx-parentx)*(int)((double)i - parentx))/(int)(currenty-parenty))+parenty;
+        double y = (((int)(currentx-parentx)*((i - (int)parentx)))/(int)(currenty-parenty))+parenty;
         int temp_y = (int)y;
     //cout<<"checking x:"<<i<<"checking y :"<<temp_y<<endl;
 //have to check temp_y+1 also for collison;
@@ -343,7 +343,7 @@ int temp_y1 = temp_y+1;
     for(int i=(int)currentx ;i<=(int)parentx;i++)
       {
         //calculate y;
-        double y = (((int)(parentx-currentx)*(int)((double)i - currentx))/(int)(currenty-parenty))+parenty;
+        double y = (((int)(parentx-currentx)*((i - (int)currentx)))/(int)(currenty-parenty))+parenty;
         int temp_y = (int)y;
         int temp_y1 = temp_y+1;
         if((temp_y-y)==0)
