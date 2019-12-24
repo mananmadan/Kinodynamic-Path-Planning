@@ -7,15 +7,14 @@ using namespace std::tr1;
 using namespace cv;
 using namespace std;
 #define pb push_back
-int motion[8][3];
 vector<vector<int> > obmap (101);
 Mat img(600, 600, CV_8UC3, Scalar(0, 0, 0));//black screen
 
 double minx,miny,maxx,maxy,xwidth,ywidth;
-double max_velx=3;
-double min_velx=-3;
-double max_vely=3;
-double min_vely=-3;
+double max_velx=3;//max vel in x direction
+double min_velx=-3;//min vel in x direction
+double max_vely=3;//max vel in y direction
+double min_vely=-3;//min vel in y direction
 class coordinates
 {
 public:
@@ -24,16 +23,16 @@ public:
   {
     this->x = x;
     this->y = y;
-    this->vx=vx;
-    this->vy=vy;
+    this->vx=vx;//current velocity at the co-ordinate in x direction
+    this->vy=vy;//current velcity at the co-ordinate in y direction
   }
 };
 class node
 {
 public:
   double x,y,cost;//gcost;
-  int p_index;
-  double vx,vy;
+  int p_index;//parent-index
+  double vx,vy;//current velocity in x and y direction at the node
 
   node()
   {
@@ -51,26 +50,18 @@ public:
   }
 
 };
-//bool verify_node( node node1,int minx, int miny, int maxx, int maxy);
-int find_min(vector<int> obs, int n);
 bool verify_node( node node1,int minx, int miny, int maxx, int maxy,node parent);
-int find_max(vector<int>  obs, int n);
 void calc_obstacle_map(vector<int> obsx, vector<int> obsy, int obsn, int reso, int rr);
 coordinates a_star_planning(double sx, double sy,double vx,double vy,double gx, double gy,double vgx,double vgy,vector<int>  obsx, vector<int>  obsy, int obsn, int reso, int rr );
-//coordinates a_star_planning(double sx, double sy, double gx, double gy, vector<int>  obsx, vector<int>  obsy, int obsn, int reso, int rr  );
 void path_planning(double x_in, double y_in,double vx,double vy,double gx, double  gy,double vgx,double vgy,vector<int> ox, vector<int> oy);
-void get_motion_model();
 double calc_heuristic(node n1, node n2);
 void revise_obstacle_coordinates(vector<int>  &ox, vector<int>  &oy);
+
 void revise_obstacle_coordinates(vector<int>  &ox, vector<int>  &oy)
 {
     printf("Enter Obstacle coordinates in the form (x,y)\nEnter -1 -1 to terminate");
     double a,b;
     cin >> a >> b;
-    //ox.pb(0);
-    //oy.pb(0);
-    //ox.pb(1000);
-    //oy.pb(1000);
     while (a!=-1 && b!=-1)
     {
       circle(img, Point((int)a*10,(int)b*10), 5, Scalar(255, 255, 0), -1, 8, 0);
@@ -78,8 +69,8 @@ void revise_obstacle_coordinates(vector<int>  &ox, vector<int>  &oy)
       waitKey(1000);
       destroyAllWindows();
       waitKey(1);waitKey(1);waitKey(1);waitKey(1);
-        ox.pb(a);
-        oy.pb(b);
+        ox.pb(a);//x co-ordinate of the obstacle
+        oy.pb(b);//y co-ordinate of the obstacle
     cin >> a >> b;
 
     }
@@ -99,15 +90,20 @@ void path_planning(double x_in, double y_in,double vx,double vy,double gx, doubl
     oy: y position list of Obstacles [m]
     reso: grid resolution [m]
     rr: robot radius[m]
+    rx: rover x-co-ordinates
+    ry : rover y-co-ordinate
+    vx:starting x velocity
+    vy:starting y velocity
+    vgx:goal x velocity
+    vgy:goal y vleocity
     */
     int reso = 1;
     int rr = 1;
     cout<<"Starting the process"<<"\n";
-    int ares_main=0;
     double rx=x_in;
     double ry=y_in;
-    vector<int>opencvx;
-    vector<int>opencvy;
+    vector<int>opencvx;//for storing nodes for opencv line drawing
+    vector<int>opencvy;//for storing nodes for opencv line drawing
     cout<<"Now at"<<rx<<" "<<ry<<"\n";
 
     cout<<"My velocity in x direction is:"<<vx<<" "<<"and in y direction is:"<<vy<<"\n";
@@ -116,8 +112,7 @@ void path_planning(double x_in, double y_in,double vx,double vy,double gx, doubl
 
     while (1)
     {
-        ares_main=ares_main+1;
-        coordinates ggkk(67,7,1,1);
+        coordinates ggkk(67,7,1,1);//values inside this variable are random , taken just to store the output from a_star_planning function
 
         ggkk = a_star_planning(rx,ry,vx,vy,gx, gy,vgx,vgy,ox, oy, ox.size(),reso,rr);
         rx = ggkk.x;
@@ -169,14 +164,25 @@ void path_planning(double x_in, double y_in,double vx,double vy,double gx, doubl
 coordinates a_star_planning(double sx, double sy,double vx,double vy,double gx, double gy,double vgx,double vgy,vector<int>  obsx, vector<int>  obsy, int obsn, int reso, int rr  )
 {
   /*
-    gx: goal x position [m]
-    gx: goal x position [m]
-    obsx: x position list of Obstacles [m]
-    obsy: y position list of Obstacles [m]
-    obsn: number of obstacles
-    reso: grid resolution [m]
-    rr: robot radius[m]
-    */
+  gx: goal x position [m]
+  gx: goal x position [m]
+  ox: x position list of Obstacles [m]
+  oy: y position list of Obstacles [m]
+  reso: grid resolution [m]
+  rr: robot radius[m]
+  rx: rover x-co-ordinates
+  ry : rover y-co-ordinate
+  vx:starting x velocity
+  vy:starting y velocity
+  vgx:goal x velocity
+  vgy:goal y vleocity
+  */
+//sx is the starting x co-ordinate
+//sy is the starting y co-ordinate
+//gx is the goal x co-ordinate
+//gy is the goal y co-ordinate
+
+
     node nstart = node(sx/reso, sy/reso,vx,vy,0.0,-1);
     node ngoal = node(gx/reso, gy/reso,vgx,vgy,0.0, -1);
 
@@ -187,22 +193,19 @@ coordinates a_star_planning(double sx, double sy,double vx,double vy,double gx, 
     }
 
     calc_obstacle_map(obsx, obsy, obsn, reso, rr);
-    //get_motion_model();//change this;
-	//error here
     typedef tr1::unordered_map <int, node> pppp;
     pppp openset;
     pppp closedset;
-    ///unordered_map <int, node> closedset;
     openset[calc_index(nstart, xwidth, minx, miny)] = nstart;
    int testing = 0;
   double finalx=0;
   double finaly=0;
   double finalvx=0;
   double finalvy=0;
-  while(testing<2)
+  while(testing<2)//testing variable to ensure that this loop only runs twice
     {
-      double min_temp = INT_MAX;
-      int cid=0;
+      double min_temp = INT_MAX;//to find the value of the min f value
+      int cid=0;//funtion to store index of the node
       for(pppp:: const_iterator i = openset.begin(); i!=openset.end(); ++i)
       {
         double rr = (i->second).cost + calc_heuristic(ngoal, i->second);
@@ -237,7 +240,7 @@ cout<<finalvy<<endl;
 {      for(int vj=min_vely;vj<=max_vely;vj++)
       {
         double cost = pow((pow((vi-current.vx),2)+pow((vj-current.vy),2)),0.5);
-        node dummy = node(current.x + (vi*1),current.y + (vj*1),current.vx+vi,current.vy+vj,cost ,cid);
+        node dummy = node(current.x + (vi*1),current.y + (vj*1),vi,vj,cost ,cid);
 	//error here xwidth intead of xw
         int n_id = calc_index(dummy, xwidth, minx, miny);
 
@@ -316,8 +319,6 @@ if(currenty == parenty )
 }
 if(currenty!=parenty and currentx!=parentx)
 {
-  //cout<<"checking for node"<<currentx<<" :"<<currenty<<endl;
-  //cout<<"and parent node"<<parentx<<" :"<<parenty<<endl;
   if(currentx>parentx)
   {
     for(int i=(int)parentx ;i<=(int)currentx;i++)
@@ -325,13 +326,10 @@ if(currenty!=parenty and currentx!=parentx)
         //calculate y;
         double y = (((int)(currentx-parentx)*((i - (int)parentx)))/(int)(currenty-parenty))+parenty;
         int temp_y = (int)y;
-    //cout<<"checking x:"<<i<<"checking y :"<<temp_y<<endl;
-//have to check temp_y+1 also for collison;
-int temp_y1 = temp_y+1;
+
+int temp_y1 = temp_y+1;//as the variable temp_y is typecasted also checking its upper node to confirm no collison
         if((temp_y-y)==0)
         {
-          //cout<<"Hello"<<endl;
-          //cout<<"Checking i:"<<i<<" "<<"temp_y:"<<temp_y<<endl;
           if(obmap[i-(int)minx][temp_y-(int)miny]||obmap[i-(int)minx][temp_y1-(int)miny])
           return 0;
         }
@@ -361,28 +359,6 @@ int temp_y1 = temp_y+1;
 }
 
 
-
-int find_min(vector<int> obs, int n)
-{
-  int min = obs[0];
-  for(int i=1;i<n;i++)
-  {
-    if(min>obs[i])
-    min=obs[i];
-  }
-  return min;
-}
-int find_max(vector<int> obs, int n)
-{
-  int max = obs[0];
-  for(int i=1;i<n;i++)
-  {
-    if(max<obs[i])
-    max=obs[i];
-  }
-//have to return max instead of min
-  return max;
-}
 void calc_obstacle_map(vector<int> obsx, vector<int> obsy, int obsn, int reso, int rr)
 {
   minx = 1;
@@ -411,46 +387,6 @@ void calc_obstacle_map(vector<int> obsx, vector<int> obsy, int obsn, int reso, i
 
 }
 
-void get_motion_model()
-{
-    // dx, dy, cost
-
-
-    motion[0][0]=1;
-    motion[0][1]=0;
-    motion[0][2]=1;
-
-    motion[1][0]=0;
-    motion[1][1]=1;
-    motion[1][2]=1;
-
-    motion[2][0]=-1;
-    motion[2][1]=0;
-    motion[2][2]=1;
-
-    motion[3][0]=0;
-    motion[3][1]=-1;
-    motion[3][2]=1;
-
-    motion[4][0]=-1;
-    motion[4][1]=-1;
-    motion[4][2]=sqrt(2);
-
-    motion[5][0]=-1;
-    motion[5][1]=1;
-    motion[5][2]=sqrt(2);
-
-    motion[6][0]=1;
-    motion[6][1]=-1;
-    motion[6][2]=sqrt(2);
-
-    motion[7][0]=1;
-    motion[7][1]=1;
-    motion[7][2]=sqrt(2);
-
-
-}
-
 
 double calc_heuristic(node n1, node n2)
 {
@@ -465,17 +401,6 @@ int main()
 
     vector<int> ox;
     vector<int> oy;
-    /*obsxarr.pb(1);obsyarr.pb(6);
-    obsxarr.pb(4);obsyarr.pb(2);
-    obsxarr.pb(2);obsyarr.pb(2);
-    obsxarr.pb(2);obsyarr.pb(3);
-    obsxarr.pb(2);obsyarr.pb(4);
-    obsxarr.pb(2);obsyarr.pb(6);
-    obsxarr.pb(4);obsyarr.pb(4);
-    obsxarr.pb(4);obsyarr.pb(4);
-    obsxarr.pb(4);obsyarr.pb(6);
-    obsxarr.pb(4);obsyarr.pb(7);
-*/
 //making box
 line(img, Point(25, 25), Point(525,25), Scalar(0, 0, 255), 1, 1);//making lines
 line(img, Point(25, 25), Point(25,525), Scalar(0, 0, 255), 1, 1);//making lines
