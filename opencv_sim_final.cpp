@@ -3,6 +3,7 @@
 #include</usr/include/opencv/cv.h>
 #include<opencv2/opencv.hpp>
 #include <tr1/unordered_map>
+#include "tracker.h"
 using namespace std::tr1;
 using namespace cv;
 using namespace std;
@@ -120,7 +121,7 @@ void path_planning(double x_in, double y_in,double vx,double vy,double gx, doubl
        cout<<"go to ::::::"<<" ";
        cout<<rx<<" "<<ry<<"\n";
 
-       cout<<"You will each with velcity in x:"<<ggkk.vx<<" "<<"and in y:"<<ggkk.vy<<endl;
+       cout<<"You will reach with velcity in x:"<<ggkk.vx<<" "<<"and in y:"<<ggkk.vy<<endl;
        circle(img, Point((int)rx*10,(int)ry*10), 5, Scalar(0, 0, 255), -1, 8, 0);
        line(img,Point((opencvx[0])*10,(opencvy[0])*10),Point((int)rx*10,(int)ry*10),Scalar(255, 0, 0), 2, 8);
        imshow("Display Window",img);
