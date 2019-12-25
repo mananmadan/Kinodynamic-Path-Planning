@@ -3,6 +3,7 @@
 #include</usr/include/opencv/cv.h>
 #include<opencv2/opencv.hpp>
 #include <tr1/unordered_map>
+#include "tracker.h"
 using namespace std::tr1;
 using namespace cv;
 using namespace std;
