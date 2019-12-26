@@ -117,7 +117,7 @@ void path_planning(double x_in, double y_in,double vx,double vy,double gx, doubl
 
        cout<<"You will each with velcity in x:"<<ggkk.vx<<" "<<"and in y:"<<ggkk.vy<<endl;
        circle(img, Point((int)rx*10,(int)ry*10), 5, Scalar(0, 0, 255), -1, 8, 0);
-       line(img,Point((opencvx[0])*10,(opencvy[0])*10),Point((int)rx*10,(int)ry*10),Scalar(255, 0, 0), 2, 8);
+       line(img,Point((opencvx[0])*10,(opencvy[0])*10),Point((int)rx*10,(int)ry*10),Scalar(255, 0, 0), 1, 8);
        imshow("Display Window",img);
        waitKey(1000);
        destroyAllWindows();
