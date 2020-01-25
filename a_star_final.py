@@ -1,5 +1,5 @@
 import math
-
+#for python3 replace raw_input() with input()
 max_velx = 3
 min_velx = -3
 max_vely = 3
@@ -30,13 +30,13 @@ class Node:
 
 def revise_obstacle_coordinates(ox, oy):
     print("Enter Obstacle coordinates in the form (x,y)\n" + "Enter -1 -1 to terminate")
-    s = input().split()
+    s = raw_input().split()
     a = int(s[0])
     b = int(s[1])
     while a!=-1 and b!=-1:
         ox.append(a)
         oy.append(b)
-        s = input().split()
+        s = raw_input().split()
         a = int(s[0])
         b = int(s[1])
     return ox,oy
@@ -70,20 +70,21 @@ def path_planning(x_in, y_in, vx, vy, gx, gy, vgx, vgy, ox, oy):
 
         rx = ggkk.x
         ry = ggkk.y
+        print("now i am here"+ str(rx)+str(ry))
         if rx==gx and ry==gy and ggkk.vx == vgx and ggkk.vy == vgy:
             break
         '''
-        Suppose we also get feedback corresponding to the location of the rover as input
+        Suppose we also get feedback corresponding to the location of the rover as raw_input
         then we can do incorporate that as wellself.
         if bool variable feed_loc is true then the revised location of rover will be used
         for path path_planning
         '''
         ox,oy = revise_obstacle_coordinates(ox,oy)
         print("Enter 1 for location feedback")
-        feed_loc = int(input())
+        feed_loc = int(raw_input())
         if feed_loc is 1:
             print("Enter new coordinates")
-            d = input().split()
+            d = raw_input().split()
             rx = int(d[0])
             ry = int(d[1])
 
@@ -208,20 +209,20 @@ def verify_node(node, obmap, minx, miny, maxx, maxy, parent):
     if currentx == parentx:
         smally = min(currenty, parenty)
         bigy = max(currenty, parenty)
-        for i in range(smally, int(bigy)+1):
+        for i in range(int(smally), int(bigy)+1):
             if obmap[int(currentx-minx)][i-int(miny)]:
                 return False
     #go to check from small x co-ordinate to bigger x co-ordinate check if the robot if the calculated y point is an integer and then if it is check it there is a obstacle there.
     if currenty == parenty:
         smallx = min(currentx, parentx)
         bigx = max(currentx, parentx)
-        for i in range(smallx, int(bigx)+1):
+        for i in range(int(smallx), int(bigx)+1):
             if obmap[int(currentx-minx)][i-int(miny)]:
                 return False
 
     if currenty != parenty and currentx != parentx:
         if currentx > parentx:
-            for i in range(int(parentx), currentx+1):
+            for i in range(int(parentx), int(currentx)+1):
                 y = ((int(currentx-parentx)*((i - int(parentx))))/int(currenty-parenty))+parenty
                 temp_y = int(y)
                 temp_y1 = temp_y + 1
@@ -229,7 +230,7 @@ def verify_node(node, obmap, minx, miny, maxx, maxy, parent):
                     if obmap[i-int(minx)][temp_y-int(miny)] or obmap[i-int(minx)][temp_y1-int(miny)]:
                         return False
         elif currentx < parentx:
-            for i in range(int(currentx), parentx+1):
+            for i in range(int(currentx), int(parentx)+1):
                 y = ((int(parentx-currentx)*((i - int(currentx))))/int(currenty-parenty))+parenty
                 temp_y = int(y)
                 temp_y1 = temp_y + 1
@@ -269,26 +270,29 @@ def calc_index(node, xwidth, xmin, ymin):
 
 print("Lets start working")
 print("Enter starting position coordinates")
-d = input().split()
+d = raw_input().split()
+print(d)
 x_in = int(d[0])
+print(x_in)
 y_in = int(d[1])
 
+print(y_in)
 print("Enter goal coordinates")
-d = input().split()
+d = raw_input().split()
 gx = int(d[0])
 gy = int(d[1])
 print("Enter starting x velocity")
-vx = int(input())
+vx = int(raw_input())
 print("Enter starting y velocity")
-vy = int(input())
+vy = int(raw_input())
 print("Enter goal x velocity")
-vgx = int(input())
+vgx = int(raw_input())
 print("Enter goal y velocity")
-vgy = int(input())
+vgy = int(raw_input())
 print("Depth Map updated at starting position?")
-depth_map_status = input()
+depth_map_status = raw_input()
 while depth_map_status == 0:
-    depth_map_status = input()
+    depth_map_status = raw_input()
 ox = []
 oy = []
 ox, oy = revise_obstacle_coordinates(ox, oy)
