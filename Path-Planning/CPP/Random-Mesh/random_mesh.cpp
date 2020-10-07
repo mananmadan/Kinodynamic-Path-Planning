@@ -207,9 +207,11 @@ cout<<finalvy<<endl;
       openset.erase(cid);
       closedset[cid] = current;
 
+// KINODYNAMIC PART 
       for(int vi=min_velx;vi<=max_velx;vi++)
 {      for(int vj=min_vely;vj<=max_vely;vj++)
       {
+        //COST CALCULAITON ACCORDING TO CHANGE IN VELOCITY VECTOR
         double cost = pow((pow((vi-current.vx),2)+pow((vj-current.vy),2)),0.5);
         node dummy = node(current.x + (vi*1),current.y + (vj*1),vi,vj,cost ,cid);
 	//error here xwidth intead of xw
