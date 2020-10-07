@@ -63,6 +63,7 @@ double calc_heuristic(node n1, node n2);
 void revise_obstacle_coordinates(vector<int>  &ox, vector<int>  &oy);
 void revise_obstacle_coordinates(vector<int>  &ox, vector<int>  &oy)
 {
+    //randomised obstacle addition
     int a,b;
     for (int a = 3; a <= 52; a++) {
         for (int j = 0; j < 10; j++){
@@ -428,7 +429,6 @@ double calc_heuristic(node n1, node n2)
 
 int main()
 {
- //[10] = {1, 2, 2, 2, 2, 4, 4, 4, 4, 4}, obsyarr[10] = {6, 2, 3, 4, 6, 2, 4, 5, 6, 7};
 
     vector<int> ox;
     vector<int> oy;

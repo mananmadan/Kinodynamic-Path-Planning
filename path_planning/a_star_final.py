@@ -19,7 +19,7 @@ class Node:
     def __init__(self, x, y, vx, vy, cost, pind):
         self.x = x
         self.y = y
-        self.cost = cost
+        self.cost }{}}}= cost
         self.pind = pind
         self.vx = vx
         self.vy = vy
