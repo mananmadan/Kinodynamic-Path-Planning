@@ -2,4 +2,4 @@
 
 
 ## Output
-- ![output](output.jpg)
+- ![output](output.gif)
