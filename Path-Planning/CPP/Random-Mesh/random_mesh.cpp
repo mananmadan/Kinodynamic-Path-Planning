@@ -188,13 +188,13 @@ coordinates a_star_planning(double sx, double sy,double vx,double vy,double gx, 
 
       }
       node current = openset[cid];
-     cout << current.x << "," <<  current.y << endl;
-finalx=current.x;
-finaly=current.y;
-finalvx = current.vx;
-finalvy = current.vy;
-cout<<finalvx<<endl;
-cout<<finalvy<<endl;
+      cout << current.x << "," <<  current.y << endl;
+      finalx=current.x;
+      finaly=current.y;
+      finalvx = current.vx;
+      finalvy = current.vy;
+      cout<<finalvx<<endl;
+      cout<<finalvy<<endl;
 
       if ( current.x == ngoal.x && current.y == ngoal.y && current.vx == ngoal.vx && current.vy == ngoal.vy)
       {
@@ -213,8 +213,9 @@ cout<<finalvy<<endl;
       {
         //COST CALCULAITON ACCORDING TO CHANGE IN VELOCITY VECTOR
         double cost = pow((pow((vi-current.vx),2)+pow((vj-current.vy),2)),0.5);
+
         node dummy = node(current.x + (vi*1),current.y + (vj*1),vi,vj,cost ,cid);
-	//error here xwidth intead of xw
+      	//error here xwidth intead of xw
         int n_id = calc_index(dummy, xwidth, minx, miny);
 
         if(closedset.find(n_id)!=closedset.end())
