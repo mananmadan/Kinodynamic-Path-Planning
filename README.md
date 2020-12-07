@@ -9,7 +9,7 @@ change in the robot from current state to next state.
 - An OpenCV based visualization is also available
 
 ### Output (Simulated in OpenCV)
-- ![output](output.jpg)
+![output](output.jpg)
  
 ### Motion Planning Framework for [Team ARES](https://github.com/teamares)
-- ![output](output.gif)
+![output](output.gif)
