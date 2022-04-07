@@ -6,9 +6,11 @@ using namespace std::tr1;
 using namespace cv;
 using namespace std;
 #define pb push_back
+#define db(x)  cout<<#x<<" : "<<x<<endl
+
 int motion[8][3];
 vector<vector<int> > obmap (101);
-Mat img(600, 600, CV_8UC3, Scalar(0, 0, 0));//black screen
+Mat img(600, 600, CV_8UC3, Scalar(255,255,255));//white screen
 
 double minx,miny,maxx,maxy,xwidth,ywidth;
 double max_velx=3;
@@ -64,6 +66,7 @@ void revise_obstacle_coordinates(vector<int>  &ox, vector<int>  &oy);
 void revise_obstacle_coordinates(vector<int>  &ox, vector<int>  &oy)
 {
     //randomised obstacle addition
+    /*
     int a,b;
     for (int a = 3; a <= 52; a++) {
         for (int j = 0; j < 10; j++){
@@ -74,6 +77,33 @@ void revise_obstacle_coordinates(vector<int>  &ox, vector<int>  &oy)
             circle(img, Point((int)a*10,(int)b*10), 5, Scalar(255, 255, 0), -1, 8, 0);
         }
     }
+    */
+
+    //placing 2 cols
+  for(int i=4;i<=20;i++)
+  {
+     //row 
+     ox.pb(5);
+     oy.pb(i);
+     circle(img, Point((int)5*10,(int)i*10), 5, Scalar(211,211,211), -1, 8, 0);
+  }
+  
+
+  for(int i=20;i<=30;i++)
+  {
+     //row 
+     ox.pb(8);
+     oy.pb(i);
+     circle(img, Point((int)8*10,(int)i*10), 5, Scalar(211,211,211), -1, 8, 0);
+  }
+  
+  for(int i=15;i<=38;i++)
+  {
+     //row 
+     ox.pb(11);
+     oy.pb(i);
+     circle(img, Point((int)11*10,(int)i*10), 5, Scalar(211,211,211), -1, 8, 0);
+  }
 
     return ;
 }
@@ -116,9 +146,9 @@ void path_planning(double x_in, double y_in,double vx,double vy,double gx, doubl
        cout<<"go to ::::::"<<" ";
        cout<<rx<<" "<<ry<<"\n";
 
-       cout<<"You will each with velcity in x:"<<ggkk.vx<<" "<<"and in y:"<<ggkk.vy<<endl;
-       circle(img, Point((int)rx*10,(int)ry*10), 5, Scalar(0, 0, 255), -1, 8, 0);
-       line(img,Point((opencvx[0])*10,(opencvy[0])*10),Point((int)rx*10,(int)ry*10),Scalar(255, 0, 0), 1, 8);
+       cout<<"You will reach with velcity in x:"<<ggkk.vx<<" "<<"and in y:"<<ggkk.vy<<endl;
+       circle(img, Point((int)rx*10,(int)ry*10), 5, Scalar(255, 255, 0), -1, 8, 0);
+       line(img,Point((opencvx[0])*10,(opencvy[0])*10),Point((int)rx*10,(int)ry*10),Scalar(45, 255, 255), 3, 8);
        imshow("Display Window",img);
        waitKey(1000);
        destroyAllWindows();
@@ -188,13 +218,14 @@ coordinates a_star_planning(double sx, double sy,double vx,double vy,double gx, 
 
       }
       node current = openset[cid];
-      cout << current.x << "," <<  current.y << endl;
+      db(current.x);
+      db(current.y);
       finalx=current.x;
       finaly=current.y;
       finalvx = current.vx;
       finalvy = current.vy;
-      cout<<finalvx<<endl;
-      cout<<finalvy<<endl;
+      db(finalvx);
+      db(finalvy);
 
       if ( current.x == ngoal.x && current.y == ngoal.y && current.vx == ngoal.vx && current.vy == ngoal.vy)
       {
@@ -447,18 +478,18 @@ int main()
     obsxarr.pb(4);obsyarr.pb(7);
 */
 //making box
-line(img, Point(25, 25), Point(525,25), Scalar(0, 0, 255), 1, 1);//making lines
-line(img, Point(25, 25), Point(25,525), Scalar(0, 0, 255), 1, 1);//making lines
-line(img, Point(25, 525), Point(525,525), Scalar(0, 0, 255), 1, 1);//making lines
-line(img, Point(525, 25), Point(525,525), Scalar(0, 0, 255), 1, 1);//making lines
+line(img, Point(25, 25), Point(525,25), Scalar(0, 0, 0), 1, 1);//making lines
+line(img, Point(25, 25), Point(25,525), Scalar(0, 0, 0), 1, 1);//making lines
+line(img, Point(25, 525), Point(525,525), Scalar(0, 0, 0), 1, 1);//making lines
+line(img, Point(525, 25), Point(525,525), Scalar(0, 0, 0), 1, 1);//making lines
 //making grid
 for(int i=25;i<=525;i=i+10)//making y lines
 {
-  line(img,Point(i,25),Point(i,525),Scalar(255, 255, 255), 0, 0);
-}
+  line(img,Point(i,25),Point(i,525),Scalar(0, 0, 0), 0, 0);
+} 
 for(int i=25;i<=525;i=i+10)//making x lines
 {
-  line(img,Point(25,i),Point(525,i),Scalar(255, 255, 255), 0, 0);
+  line(img,Point(25,i),Point(525,i),Scalar(0,0,0), 0, 0);
 }
 
 
@@ -476,7 +507,7 @@ destroyAllWindows();
 waitKey(1);waitKey(1);waitKey(1);waitKey(1);
 printf("Enter goal coordinates");
 cin >> gx >> gy;
-circle(img, Point((int)gx*10,(int)gy*10), 5, Scalar(0, 0, 255), -1, 8, 0);
+circle(img, Point((int)gx*10,(int)gy*10), 5, Scalar(255,255 ,0), -1, 8, 0);
 imshow("Display Window",img);
 waitKey(1000);
 destroyAllWindows();
@@ -494,7 +525,24 @@ cin>>vgx;
 cout<<"Enter goal y velocity"<<"\n";
 cin>>vgy;
 
-revise_obstacle_coordinates(ox,oy);
-path_planning(x_in, y_in,vx,vy,gx,gy,vgx,vgy,ox,oy);
+revise_obstacle_coordinates(ox,oy); //randomised obstacle addition
+path_planning(x_in, y_in,vx,vy,gx,gy,vgx,vgy,ox,oy); 
+
+//destroy any prev open windows
+destroyAllWindows();
+waitKey(1);waitKey(1);waitKey(1);waitKey(1);
+
+
+//make the goal point red
+circle(img, Point((int)gx*10,(int)gy*10), 5, Scalar(0,0,255), -1, 8, 0);
+//show img again
+imshow("Final Path",img);
+waitKey(0);
+
+//save img
+imwrite("Res1.jpg",img);
+
+return 0;
+
 
 }

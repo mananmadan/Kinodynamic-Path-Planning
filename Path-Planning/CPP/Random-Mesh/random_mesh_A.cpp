@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 #include</usr/include/opencv/highgui.h>
-#include <opencv2/opencv.hpp>
+#include </usr/include/opencv2/opencv.hpp>
 #include <tr1/unordered_map>
 using namespace std::tr1;
 using namespace cv;
@@ -499,7 +499,7 @@ cin>>vgx;
 cout<<"Enter goal y velocity"<<"\n";
 cin>>vgy;
 
-revise_obstacle_coordinates(ox,oy);
+revise_obstacle_coordinates(ox,oy); //randomised obstacle
 path_planning(x_in, y_in,vx,vy,gx,gy,vgx,vgy,ox,oy);
 
 }

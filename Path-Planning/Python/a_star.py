@@ -173,7 +173,7 @@ class AStarPlanner:
             return False
 
         # collision check
-        if self.obstacle_map[node.x][node.y]:
+        if self.obstacle_map[int(node.x)][int(node.y)]:
             return False
 
         return True
@@ -193,6 +193,8 @@ class AStarPlanner:
         self.y_width = round((self.max_y - self.min_y) / self.resolution)
         print("x_width:", self.x_width)
         print("y_width:", self.y_width)
+	self.x_width = int(self.x_width)
+	self.y_width = int(self.y_width)
 
         # obstacle map generation
         self.obstacle_map = [[False for _ in range(self.y_width)]
